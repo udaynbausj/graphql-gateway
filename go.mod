@@ -3,6 +3,7 @@ module github.com/udaynbausj/graphql-gateway
 go 1.15
 
 require (
+	github.com/go-redis/redis/v8 v8.4.0 // indirect
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392 // indirect
