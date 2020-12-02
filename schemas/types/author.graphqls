@@ -1,0 +1,282 @@
+type Author {
+    id : ID!
+
+    "Id of author"
+    authorId : ID!
+
+    "User Id of the author"
+    userId: String
+
+    "Name of the author"
+    name: String
+
+    "Name of the author in English"
+    nameEn: String
+
+    "Display name of the author"
+    displayName: String
+
+    "Full Name of the author"
+    fullName: String
+
+    "Full Name of the author in English"
+    fullNameEn: String
+
+    "First Name of the author"
+    firstName: String
+
+    "First Name of the author in English"
+    firstNameEn: String
+
+    "Last Name of the author"
+    lastName: String
+
+    "Last Name of the author in English"
+    lastNameEn: String
+
+    "Pen Name of the author"
+    penName: String
+
+    "Pen Name of author in English"
+    penNameEn: String
+
+    "Slug of the author"
+    slug: String
+
+    "Author page of the author"
+    pageUrl: String
+
+    "Whether the author has a profile image"
+    hasProfileImage: Boolean
+
+    "Profile Image for the author"
+    profileImageUrl: String
+
+    "Cover Image for the author"
+    coverImageUrl: String
+
+    "Language this author writes in"
+    language: String
+
+    "Summary of the author"
+    summary: String
+
+    "Total read of all the content written by the author"
+    readCount: Int
+
+    "User Info for the author"
+    user: User
+
+    "Follow info for this author"
+    userFollowInfo: FollowInfo
+
+    "The published contents for this author"
+    publishedContents(where: AuthorPublishedContentsQueryInput, page: LimitCursorPageInput): Contents
+
+    "The drafted contents for this author"
+    draftedContents(where: AuthorDraftedContentsQueryInput, page: LimitCursorPageInput): Contents @skipForNonLoggedIn
+
+    "The followers for the author"
+    followers(page: LimitCursorPageInput): AuthorFollowers @cost(multipliers: ["page.limit"])
+
+    "The authors, this user/author is following"
+    following(page: LimitCursorPageInput): UserFollowing @cost(multipliers: ["page.limit"])
+
+    "Reader Dashboard for this Author"
+    readerDashboard: ReaderDashboardStats
+
+    contentStats: AuthorContentStats @skipForNonLoggedIn
+
+    "Controls wether to show author badge or not"
+    showAuthorBadge: Boolean
+
+    "True if the author is the currernt logged in user author"
+    isThisMe: Boolean
+
+    "Date of birth of author"
+    dateOfBirth: Date @skipForNonLoggedIn
+}
+
+type Contents {
+
+    "Total Contents Published"
+    total: Int @cost(complexity: 1, useMultipliers: false)
+
+    "Cursor"
+    cursor: String @cost(complexity: 1, useMultipliers: false)
+
+    "Stop Pagination if False"
+    hasMoreContents: Boolean @cost(complexity: 1, useMultipliers: false)
+
+    "Content Item"
+    contents: [ContentItem]
+
+}
+
+type AuthorItem {
+
+    "Author Id"
+    id: ID!
+
+    "Author Details"
+    author: Author
+
+}
+
+"Options for PublishedContent"
+input AuthorPublishedContentsQueryInput {
+
+    "Sort"
+    sort: String
+
+}
+
+"Options for DraftedContent"
+input AuthorDraftedContentsQueryInput {
+
+    types: [String]
+
+}
+
+input UpdateAuthorInfoInput {
+
+    "First Name of the author"
+    firstName: String
+
+    "First Name of the author in English"
+    firstNameEn: String
+
+    "Last Name of the author"
+    lastName: String
+
+    "Last Name of the author in English"
+    lastNameEn: String
+
+    "Pen Name of the author"
+    penName: String
+
+    "Pen Name of author in English"
+    penNameEn: String
+
+    "Language this author writes in"
+    language: String
+
+    "Summary of the author"
+    summary: String
+
+}
+
+input followAuthorInput {
+
+    authorId: ID!
+
+}
+
+input unFollowAuthorInput {
+
+    authorId: ID!
+
+}
+
+"Options for PublishedContent"
+input getMyContentsQueryInput {
+
+    filters: [getMyContentsQueryTypeFilterInput]
+
+    "Sort"
+    sort: String
+
+}
+
+input getMyContentsQueryTypeFilterInput {
+
+    type: String!
+
+    states: [String]
+}
+
+input getAuthorInput {
+
+    authorId: ID
+
+    authorSlug: String
+
+    userId: ID
+
+}
+
+type getAuthorPayload {
+
+    isAuthorPresent: Boolean
+
+    author: Author
+
+}
+
+type authorContentStats {
+
+    id: ID!
+
+    pratilipi: AuthorPratilipiCountStats
+
+    series: AuthorSeriesCountStats
+
+    seriesPart: AuthorSeriesPartCountStats
+
+}
+
+type authorPratilipiCountStats {
+
+    published: Int
+
+    drafted: Int
+
+    deleted: Int
+
+}
+
+type authorSeriesCountStats {
+
+    inProgress: Int
+
+    completed: Int
+
+}
+
+type authorSeriesPartCountStats {
+
+    published: Int
+
+    drafted: Int
+
+}
+
+input getAuthorAchievementInput {
+
+    userId: ID
+}
+
+type getAuthorAchievementPayload {
+
+    authorAchievements: authorAchievements
+
+}
+
+type authorAchievements {
+
+    categoryRankings: [authorCategoryRanking]
+
+}
+
+type authorCategoryRanking {
+
+    id: ID!
+
+    rank: Int
+
+    type: String
+
+    categoryId: ID
+
+    category: Category
+}
